@@ -1,0 +1,716 @@
+<!--
+  ЮРИДИЧЕСКАЯ КОМПАНИЯ — блок для Tilda (T123 «Произвольный HTML»)
+  Название: замените {{НАЗВАНИЕ}} (Ctrl+F) во всём файле.
+  Цвета и шрифты — в переменных .jr-site ниже.
+  Форма: укажите адрес приёма заявок в JR_FORM_ENDPOINT (внизу в <script>).
+-->
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+.jr-site, .jr-site * { box-sizing: border-box; margin: 0; padding: 0; }
+.jr-site input, .jr-site textarea, .jr-site select, .jr-site button { font: inherit; }
+
+.jr-site {
+  --navy:   #14213d;
+  --navy2:  #1d2d50;
+  --ink:    #1b1f2a;
+  --text:   #3b4252;
+  --muted:  #7a8191;
+  --bronze: #a8793a;
+  --bronze2:#c79a5b;
+  --bg:     #faf8f4;
+  --card:   #ffffff;
+  --line:   #e7e2d8;
+  --radius: 14px;
+  --serif:  'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans:   'Inter', -apple-system, 'Segoe UI', Arial, sans-serif;
+
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+.jr-site a { color: inherit; text-decoration: none; }
+.jr-site section { scroll-margin-top: 76px; }
+
+.jr-wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+.jr-sec  { padding: 96px 0; }
+.jr-sec--alt  { background: #f2eee6; }
+.jr-sec--dark { background: var(--navy); color: rgba(255,255,255,.78); }
+
+.jr-eyebrow {
+  display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--bronze); margin-bottom: 14px;
+}
+.jr-sec--dark .jr-eyebrow { color: var(--bronze2); }
+.jr-h2 {
+  font-family: var(--serif); font-weight: 600; color: var(--navy);
+  font-size: clamp(32px, 4.4vw, 52px); line-height: 1.08; letter-spacing: -.01em;
+  max-width: 760px;
+}
+.jr-sec--dark .jr-h2 { color: #fff; }
+.jr-lead { margin-top: 18px; max-width: 640px; font-size: 17px; color: var(--muted); }
+.jr-sec--dark .jr-lead { color: rgba(255,255,255,.6); }
+.jr-head { margin-bottom: 56px; }
+
+/* кнопки */
+.jr-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 15px 28px; border-radius: 999px; border: 1px solid transparent;
+  font-weight: 600; font-size: 15px; cursor: pointer; transition: .25s ease;
+}
+.jr-btn--gold { background: var(--bronze); color: #fff; }
+.jr-btn--gold:hover { background: var(--bronze2); transform: translateY(-2px); }
+.jr-btn--ghost { border-color: rgba(255,255,255,.35); color: #fff; }
+.jr-btn--ghost:hover { background: rgba(255,255,255,.1); }
+.jr-btn--line { border-color: var(--navy); color: var(--navy); }
+.jr-btn--line:hover { background: var(--navy); color: #fff; }
+
+/* ───── МЕНЮ ───── */
+.jr-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 68px;
+  background: rgba(250,248,244,.86); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line); transition: box-shadow .3s;
+}
+.jr-nav.scrolled { box-shadow: 0 6px 24px rgba(20,33,61,.08); }
+.jr-nav__in { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.jr-logo { font-family: var(--serif); font-size: 26px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 10px; }
+.jr-logo i { width: 10px; height: 10px; background: var(--bronze); transform: rotate(45deg); display: block; }
+.jr-links { display: flex; gap: 26px; font-size: 14px; font-weight: 500; }
+.jr-links a { color: var(--text); transition: color .2s; }
+.jr-links a:hover { color: var(--bronze); }
+.jr-nav__r { display: flex; align-items: center; gap: 18px; }
+.jr-tel { font-weight: 600; color: var(--navy); font-size: 15px; }
+.jr-burger { display: none; width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer; position: relative; }
+.jr-burger span, .jr-burger span::before, .jr-burger span::after {
+  content: ''; position: absolute; left: 11px; right: 11px; height: 2px; background: var(--navy); transition: .25s;
+}
+.jr-burger span { top: 20px; }
+.jr-burger span::before { left: 0; right: 0; top: -6px; }
+.jr-burger span::after  { left: 0; right: 0; top: 6px; }
+.jr-burger.open span { background: transparent; }
+.jr-burger.open span::before { top: 0; transform: rotate(45deg); }
+.jr-burger.open span::after  { top: 0; transform: rotate(-45deg); }
+
+.jr-mob {
+  display: none; position: fixed; top: 68px; left: 0; right: 0; z-index: 499;
+  background: var(--bg); border-bottom: 1px solid var(--line); padding: 12px 24px 24px;
+  box-shadow: 0 20px 40px rgba(20,33,61,.12);
+}
+.jr-mob.open { display: block; }
+.jr-mob a { display: block; padding: 14px 0; border-bottom: 1px solid var(--line); font-weight: 500; color: var(--navy); }
+.jr-mob .jr-btn { width: 100%; margin-top: 18px; border-bottom: none; color: #fff; }
+
+/* ───── HERO ───── */
+.jr-hero {
+  position: relative; padding: 168px 0 96px; color: #fff; overflow: hidden;
+  background:
+    radial-gradient(900px 500px at 85% 10%, rgba(199,154,91,.22), transparent 60%),
+    linear-gradient(160deg, var(--navy) 0%, #0d1730 100%);
+}
+.jr-hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .05;
+  background-image: linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+.jr-hero .jr-wrap { position: relative; z-index: 1; }
+.jr-hero__tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; font-size: 13px; color: rgba(255,255,255,.8); margin-bottom: 28px; }
+.jr-hero__tag i { width: 7px; height: 7px; border-radius: 50%; background: var(--bronze2); }
+.jr-hero h1 {
+  font-family: var(--serif); font-weight: 600; font-size: clamp(42px, 7vw, 88px);
+  line-height: 1.02; letter-spacing: -.02em; max-width: 920px;
+}
+.jr-hero h1 em { font-style: italic; color: var(--bronze2); }
+.jr-hero p { margin-top: 26px; max-width: 560px; font-size: 18px; color: rgba(255,255,255,.7); }
+.jr-hero__cta { margin-top: 38px; display: flex; flex-wrap: wrap; gap: 14px; }
+.jr-stats { margin-top: 72px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 760px; border-top: 1px solid rgba(255,255,255,.15); padding-top: 32px; }
+.jr-stat b { display: block; font-family: var(--serif); font-size: clamp(34px, 4.4vw, 54px); font-weight: 600; color: #fff; line-height: 1; }
+.jr-stat span { display: block; margin-top: 8px; font-size: 14px; color: rgba(255,255,255,.55); }
+
+/* ───── СЕТКИ / КАРТОЧКИ ───── */
+.jr-grid { display: grid; gap: 22px; }
+.jr-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.jr-grid--4 { grid-template-columns: repeat(4, 1fr); }
+.jr-grid--2 { grid-template-columns: repeat(2, 1fr); }
+
+.jr-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 32px 28px; transition: transform .3s ease, box-shadow .3s ease, border-color .3s;
+}
+.jr-card:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(20,33,61,.1); border-color: var(--bronze2); }
+.jr-ico { width: 48px; height: 48px; border-radius: 12px; background: #f4ece0; color: var(--bronze); display: grid; place-items: center; margin-bottom: 22px; }
+.jr-ico svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.jr-card h3 { font-family: var(--serif); font-size: 26px; font-weight: 600; color: var(--navy); line-height: 1.15; margin-bottom: 10px; }
+.jr-card p { font-size: 15px; color: var(--muted); }
+.jr-card__more { display: inline-block; margin-top: 18px; font-size: 14px; font-weight: 600; color: var(--bronze); }
+
+/* О компании */
+.jr-about { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
+.jr-about p { margin-top: 18px; font-size: 17px; }
+.jr-photo {
+  aspect-ratio: 4/5; border-radius: 20px; position: relative; overflow: hidden;
+  background: linear-gradient(145deg, var(--navy2), var(--navy));
+  display: grid; place-items: center; color: rgba(255,255,255,.35); font-size: 14px; text-align: center; padding: 20px;
+}
+.jr-photo::after { content: ''; position: absolute; inset: 14px; border: 1px solid rgba(199,154,91,.45); border-radius: 12px; }
+.jr-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.jr-checks { margin-top: 26px; list-style: none; display: grid; gap: 12px; }
+.jr-checks li { display: flex; gap: 12px; align-items: flex-start; }
+.jr-checks li::before { content: ''; flex: 0 0 20px; height: 20px; margin-top: 3px; border-radius: 50%; background: var(--bronze) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 10.5l2.7 2.7L14 7.8' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/20px no-repeat; }
+
+/* Почему мы */
+.jr-why { padding: 28px 24px; border-top: 2px solid var(--bronze2); background: rgba(255,255,255,.04); border-radius: 0 0 var(--radius) var(--radius); }
+.jr-why b { display: block; font-family: var(--serif); font-size: 44px; color: var(--bronze2); line-height: 1; margin-bottom: 12px; }
+.jr-why h3 { font-family: var(--serif); font-size: 24px; color: #fff; margin-bottom: 8px; font-weight: 600; }
+.jr-why p { font-size: 15px; color: rgba(255,255,255,.6); }
+
+/* Команда */
+.jr-team .jr-photo { aspect-ratio: 3/4; border-radius: 16px; margin-bottom: 18px; font-family: var(--serif); font-size: 64px; color: rgba(255,255,255,.3); }
+.jr-person h3 { font-family: var(--serif); font-size: 26px; color: var(--navy); font-weight: 600; }
+.jr-person span { display: block; font-size: 14px; color: var(--bronze); font-weight: 500; margin-top: 2px; }
+.jr-person p { margin-top: 8px; font-size: 14px; color: var(--muted); }
+
+/* Этапы */
+.jr-steps { counter-reset: s; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; position: relative; }
+.jr-step { counter-increment: s; padding-top: 24px; border-top: 1px solid var(--line); position: relative; }
+.jr-step::before { content: '0' counter(s); font-family: var(--serif); font-size: 48px; font-weight: 600; color: var(--bronze); display: block; line-height: 1; margin-bottom: 14px; }
+.jr-step::after { content: ''; position: absolute; top: -4px; left: 0; width: 7px; height: 7px; background: var(--bronze); transform: rotate(45deg); }
+.jr-step h3 { font-family: var(--serif); font-size: 24px; color: var(--navy); margin-bottom: 8px; font-weight: 600; }
+.jr-step p { font-size: 15px; color: var(--muted); }
+
+/* Кейсы */
+.jr-case { display: flex; flex-direction: column; }
+.jr-case__tag { align-self: flex-start; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--bronze); background: #f4ece0; padding: 5px 12px; border-radius: 999px; margin-bottom: 18px; }
+.jr-case dl { margin-top: 14px; display: grid; gap: 10px; font-size: 14px; }
+.jr-case dt { font-weight: 600; color: var(--navy); }
+.jr-case dd { color: var(--muted); }
+.jr-case__res { margin-top: auto; padding-top: 20px; font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--bronze); line-height: 1.1; }
+
+/* Отзывы */
+.jr-quote { position: relative; }
+.jr-quote::before { content: '“'; font-family: var(--serif); font-size: 80px; line-height: .6; color: var(--bronze2); display: block; margin-bottom: 8px; }
+.jr-quote p { font-size: 16px; color: var(--text); }
+.jr-quote footer { margin-top: 20px; display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.jr-quote footer i { width: 40px; height: 40px; border-radius: 50%; background: var(--navy); color: #fff; display: grid; place-items: center; font-style: normal; font-weight: 600; }
+.jr-quote footer b { display: block; color: var(--navy); }
+.jr-quote footer span { color: var(--muted); font-size: 13px; }
+
+/* Цены */
+.jr-price { display: flex; flex-direction: column; position: relative; }
+.jr-price--hot { background: var(--navy); border-color: var(--navy); color: rgba(255,255,255,.75); }
+.jr-price--hot h3, .jr-price--hot .jr-price__sum { color: #fff; }
+.jr-price--hot p, .jr-price--hot li { color: rgba(255,255,255,.7); }
+.jr-price__badge { position: absolute; top: -13px; left: 28px; background: var(--bronze); color: #fff; font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 999px; }
+.jr-price__sum { font-family: var(--serif); font-size: 46px; font-weight: 600; color: var(--navy); margin: 14px 0 6px; line-height: 1; }
+.jr-price ul { list-style: none; margin: 22px 0 28px; display: grid; gap: 10px; font-size: 15px; color: var(--muted); }
+.jr-price li { padding-left: 24px; position: relative; }
+.jr-price li::before { content: ''; position: absolute; left: 2px; top: 9px; width: 8px; height: 8px; background: var(--bronze); transform: rotate(45deg); }
+.jr-price .jr-btn { margin-top: auto; }
+.jr-price--hot.jr-card:hover { border-color: var(--bronze2); }
+
+/* FAQ */
+.jr-faq { max-width: 860px; }
+.jr-faq details { border-bottom: 1px solid var(--line); }
+.jr-faq summary { list-style: none; cursor: pointer; padding: 24px 40px 24px 0; font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--navy); position: relative; }
+.jr-faq summary::-webkit-details-marker { display: none; }
+.jr-faq summary::after { content: '+'; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-family: var(--sans); font-size: 28px; font-weight: 300; color: var(--bronze); transition: transform .25s; }
+.jr-faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+.jr-faq details p { padding: 0 40px 26px 0; color: var(--muted); }
+
+/* Форма */
+.jr-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.jr-form { background: #fff; border-radius: 20px; padding: 36px; box-shadow: 0 30px 60px rgba(0,0,0,.25); color: var(--text); }
+.jr-form h3 { font-family: var(--serif); font-size: 30px; color: var(--navy); margin-bottom: 4px; font-weight: 600; }
+.jr-form > p { font-size: 14px; color: var(--muted); margin-bottom: 22px; }
+.jr-field { margin-bottom: 14px; }
+.jr-field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--navy); }
+.jr-field input, .jr-field select, .jr-field textarea {
+  width: 100%; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);
+  color: var(--ink); outline: none; transition: border-color .2s, box-shadow .2s;
+}
+.jr-field textarea { resize: vertical; min-height: 84px; }
+.jr-field input:focus, .jr-field select:focus, .jr-field textarea:focus { border-color: var(--bronze); box-shadow: 0 0 0 3px rgba(168,121,58,.15); }
+.jr-field.err input { border-color: #c0392b; }
+.jr-agree { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; color: var(--muted); margin: 6px 0 18px; }
+.jr-agree input { margin-top: 3px; accent-color: var(--bronze); }
+.jr-agree a { text-decoration: underline; }
+.jr-form .jr-btn { width: 100%; }
+.jr-ok { display: none; text-align: center; padding: 40px 10px; }
+.jr-ok b { font-family: var(--serif); font-size: 30px; color: var(--navy); display: block; margin-bottom: 8px; }
+.jr-form.sent .jr-ok { display: block; }
+.jr-form.sent form, .jr-form.sent > h3, .jr-form.sent > p { display: none; }
+
+/* Контакты */
+.jr-contacts { display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; }
+.jr-clist { display: grid; gap: 24px; margin-top: 8px; }
+.jr-clist small { display: block; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.jr-clist a, .jr-clist span { font-size: 20px; font-family: var(--serif); font-weight: 600; color: var(--navy); }
+.jr-clist a:hover { color: var(--bronze); }
+.jr-map { border-radius: 20px; min-height: 340px; background: linear-gradient(145deg, #e9e3d6, #f4efe5); border: 1px solid var(--line); display: grid; place-items: center; color: var(--muted); font-size: 14px; text-align: center; padding: 20px; }
+
+/* Подвал */
+.jr-foot { background: #0d1730; color: rgba(255,255,255,.5); padding: 40px 0; font-size: 13px; }
+.jr-foot .jr-wrap { display: flex; flex-wrap: wrap; gap: 16px 40px; justify-content: space-between; align-items: center; }
+.jr-foot a:hover { color: #fff; }
+.jr-foot__links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+/* Плавающая кнопка */
+.jr-fab {
+  position: fixed; right: 20px; bottom: 20px; z-index: 400; width: 58px; height: 58px; border-radius: 50%;
+  background: var(--bronze); color: #fff; display: grid; place-items: center; box-shadow: 0 10px 28px rgba(168,121,58,.5);
+  transition: transform .25s;
+}
+.jr-fab:hover { transform: scale(1.08); }
+.jr-fab svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Появление */
+.jr-rv { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.jr-rv.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .jr-rv { opacity: 1; transform: none; transition: none; } }
+
+/* ───── АДАПТИВ ───── */
+@media (max-width: 1020px) {
+  .jr-links, .jr-tel { display: none; }
+  .jr-burger { display: block; }
+  .jr-grid--4, .jr-steps { grid-template-columns: repeat(2, 1fr); }
+  .jr-grid--3 { grid-template-columns: repeat(2, 1fr); }
+  .jr-about, .jr-cta, .jr-contacts { grid-template-columns: 1fr; gap: 40px; }
+  .jr-about .jr-photo { aspect-ratio: 16/10; }
+}
+@media (max-width: 640px) {
+  .jr-sec { padding: 64px 0; }
+  .jr-hero { padding: 120px 0 64px; }
+  .jr-grid--3, .jr-grid--4, .jr-grid--2, .jr-steps { grid-template-columns: 1fr; }
+  .jr-stats { gap: 12px; }
+  .jr-nav__r .jr-btn { display: none; }
+  .jr-form { padding: 26px 20px; }
+  .jr-hero__cta .jr-btn { width: 100%; }
+  .jr-faq summary { font-size: 21px; }
+}
+</style>
+
+<div class="jr-site" id="jrSite">
+
+  <!-- МЕНЮ -->
+  <header class="jr-nav" id="jrNav">
+    <div class="jr-wrap jr-nav__in">
+      <a href="#jrTop" class="jr-logo"><i></i>{{НАЗВАНИЕ}}</a>
+      <nav class="jr-links" aria-label="Основное меню">
+        <a href="#jrServices">Услуги</a>
+        <a href="#jrAbout">О нас</a>
+        <a href="#jrTeam">Команда</a>
+        <a href="#jrCases">Кейсы</a>
+        <a href="#jrPrices">Цены</a>
+        <a href="#jrFaq">FAQ</a>
+        <a href="#jrContacts">Контакты</a>
+      </nav>
+      <div class="jr-nav__r">
+        <a class="jr-tel" href="tel:+70000000000">+7 (000) 000-00-00</a>
+        <a class="jr-btn jr-btn--gold" href="#jrForm">Консультация</a>
+        <button class="jr-burger" id="jrBurger" aria-label="Меню" aria-expanded="false"><span></span></button>
+      </div>
+    </div>
+  </header>
+  <div class="jr-mob" id="jrMob">
+    <a href="#jrServices">Услуги</a>
+    <a href="#jrAbout">О нас</a>
+    <a href="#jrTeam">Команда</a>
+    <a href="#jrCases">Кейсы</a>
+    <a href="#jrPrices">Цены</a>
+    <a href="#jrFaq">FAQ</a>
+    <a href="#jrContacts">Контакты</a>
+    <a class="jr-btn jr-btn--gold" href="#jrForm">Получить консультацию</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="jr-hero" id="jrTop">
+    <div class="jr-wrap">
+      <div class="jr-hero__tag"><i></i>Юридическая компания · Консультация в день обращения</div>
+      <h1>Защищаем ваши права <em>и&nbsp;интересы</em> там, где важна каждая деталь</h1>
+      <p>Юридическое сопровождение бизнеса и частных лиц: от консультации до победы в суде. Работаем по фиксированной стоимости и без скрытых платежей.</p>
+      <div class="jr-hero__cta">
+        <a class="jr-btn jr-btn--gold" href="#jrForm">Получить консультацию</a>
+        <a class="jr-btn jr-btn--ghost" href="#jrServices">Наши услуги</a>
+      </div>
+      <div class="jr-stats">
+        <div class="jr-stat"><b>15+</b><span>лет практики</span></div>
+        <div class="jr-stat"><b>1200+</b><span>выигранных дел</span></div>
+        <div class="jr-stat"><b>94%</b><span>положительных решений</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- НАПРАВЛЕНИЯ -->
+  <section class="jr-sec" id="jrServices">
+    <div class="jr-wrap">
+      <div class="jr-head jr-rv">
+        <span class="jr-eyebrow">Направления</span>
+        <h2 class="jr-h2">Решаем юридические задачи любой сложности</h2>
+        <p class="jr-lead">Выберите направление, и мы подберём юриста с нужной специализацией.</p>
+      </div>
+      <div class="jr-grid jr-grid--3">
+        <article class="jr-card jr-rv">
+          <div class="jr-ico"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></div>
+          <h3>Бизнес и корпоративное право</h3>
+          <p>Регистрация, сопровождение сделок, споры между партнёрами, защита от проверок.</p>
+          <a class="jr-card__more" href="#jrForm">Обсудить задачу →</a>
+        </article>
+        <article class="jr-card jr-rv">
+          <div class="jr-ico"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10M10 20v-6h4v6"/></svg></div>
+          <h3>Недвижимость</h3>
+          <p>Проверка и оформление сделок, споры с застройщиками, узаконивание, наследство.</p>
+          <a class="jr-card__more" href="#jrForm">Обсудить задачу →</a>
+        </article>
+        <article class="jr-card jr-rv">
+          <div class="jr-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15.5 14.3c3 .1 5.5 2.4 5.5 5.7"/></svg></div>
+          <h3>Семейное право</h3>
+          <p>Развод, раздел имущества, алименты, определение места жительства детей.</p>
+          <a class="jr-card__more" href="#jrForm">Обсудить задачу →</a>
+        </article>
+        <article class="jr-card jr-rv">
+          <div class="jr-ico"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0L5 7zM19 7l-3 7a3 3 0 0 0 6 0l-3-7zM8 21h8"/></svg></div>
+          <h3>Судебная защита</h3>
+          <p>Представительство в судах общей юрисдикции и арбитраже, обжалование решений.</p>
+          <a class="jr-card__more" href="#jrForm">Обсудить задачу →</a>
+        </article>
+        <article class="jr-card jr-rv">
+          <div class="jr-ico"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <h3>Банкротство</h3>
+          <p>Списание долгов физических лиц, защита имущества, банкротство компаний.</p>
+          <a class="jr-card__more" href="#jrForm">Обсудить задачу →</a>
+        </article>
+        <article class="jr-card jr-rv">
+          <div class="jr-ico"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></div>
+          <h3>Договоры и документы</h3>
+          <p>Составление и экспертиза договоров, претензии, исковые заявления, жалобы.</p>
+          <a class="jr-card__more" href="#jrForm">Обсудить задачу →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- О КОМПАНИИ -->
+  <section class="jr-sec jr-sec--alt" id="jrAbout">
+    <div class="jr-wrap jr-about">
+      <div class="jr-rv">
+        <span class="jr-eyebrow">О компании</span>
+        <h2 class="jr-h2">Юристы, которые отвечают за результат</h2>
+        <p>{{НАЗВАНИЕ}} — команда практикующих юристов с опытом в бизнесе, судах и госорганах. Мы не обещаем невозможного: честно оцениваем перспективы дела и предлагаем рабочую стратегию.</p>
+        <ul class="jr-checks">
+          <li>Фиксированная стоимость, закреплённая в договоре</li>
+          <li>Строгая конфиденциальность и адвокатская тайна</li>
+          <li>Отчёт по делу на каждом этапе</li>
+        </ul>
+        <a class="jr-btn jr-btn--line" style="margin-top:32px" href="#jrForm">Задать вопрос юристу</a>
+      </div>
+      <div class="jr-photo jr-rv">
+        <!-- Вставьте фото: <img src="URL" alt="Офис {{НАЗВАНИЕ}}"> -->
+        Фото офиса / команды
+      </div>
+    </div>
+  </section>
+
+  <!-- ПОЧЕМУ МЫ -->
+  <section class="jr-sec jr-sec--dark" id="jrWhy">
+    <div class="jr-wrap">
+      <div class="jr-head jr-rv">
+        <span class="jr-eyebrow">Преимущества</span>
+        <h2 class="jr-h2">Почему клиенты выбирают нас</h2>
+      </div>
+      <div class="jr-grid jr-grid--4">
+        <div class="jr-why jr-rv"><b>01</b><h3>Опыт</h3><p>Более 15 лет практики и сотни дел в судах всех инстанций.</p></div>
+        <div class="jr-why jr-rv"><b>02</b><h3>Прозрачные цены</h3><p>Стоимость называем заранее и фиксируем в договоре.</p></div>
+        <div class="jr-why jr-rv"><b>03</b><h3>Конфиденциальность</h3><p>Информация о деле не покидает стен компании.</p></div>
+        <div class="jr-why jr-rv"><b>04</b><h3>Скорость</h3><p>Первая консультация в день обращения, срочные дела в работе сразу.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- КОМАНДА -->
+  <section class="jr-sec jr-team" id="jrTeam">
+    <div class="jr-wrap">
+      <div class="jr-head jr-rv">
+        <span class="jr-eyebrow">Команда</span>
+        <h2 class="jr-h2">Юристы, которые ведут ваше дело</h2>
+      </div>
+      <div class="jr-grid jr-grid--4">
+        <article class="jr-person jr-rv"><div class="jr-photo">ИФ</div><h3>Имя Фамилия</h3><span>Управляющий партнёр</span><p>Корпоративное право, 18 лет опыта</p></article>
+        <article class="jr-person jr-rv"><div class="jr-photo">ИФ</div><h3>Имя Фамилия</h3><span>Старший юрист</span><p>Судебные споры, 12 лет опыта</p></article>
+        <article class="jr-person jr-rv"><div class="jr-photo">ИФ</div><h3>Имя Фамилия</h3><span>Юрист</span><p>Семейное право и наследство, 9 лет опыта</p></article>
+        <article class="jr-person jr-rv"><div class="jr-photo">ИФ</div><h3>Имя Фамилия</h3><span>Юрист</span><p>Недвижимость и банкротство, 8 лет опыта</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- КАК РАБОТАЕМ -->
+  <section class="jr-sec jr-sec--alt" id="jrProcess">
+    <div class="jr-wrap">
+      <div class="jr-head jr-rv">
+        <span class="jr-eyebrow">Процесс</span>
+        <h2 class="jr-h2">Как мы работаем</h2>
+        <p class="jr-lead">Понятный путь от первого звонка до результата.</p>
+      </div>
+      <div class="jr-steps">
+        <div class="jr-step jr-rv"><h3>Заявка</h3><p>Оставляете заявку или звоните, мы связываемся в течение 15 минут.</p></div>
+        <div class="jr-step jr-rv"><h3>Консультация</h3><p>Разбираем ситуацию, оцениваем перспективы, предлагаем стратегию.</p></div>
+        <div class="jr-step jr-rv"><h3>Договор</h3><p>Фиксируем объём работ, сроки и стоимость в договоре.</p></div>
+        <div class="jr-step jr-rv"><h3>Результат</h3><p>Ведём дело и держим вас в курсе на каждом этапе.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- КЕЙСЫ -->
+  <section class="jr-sec" id="jrCases">
+    <div class="jr-wrap">
+      <div class="jr-head jr-rv">
+        <span class="jr-eyebrow">Кейсы</span>
+        <h2 class="jr-h2">Дела, которые мы выиграли</h2>
+      </div>
+      <div class="jr-grid jr-grid--3">
+        <article class="jr-card jr-case jr-rv">
+          <span class="jr-case__tag">Бизнес</span>
+          <h3>Спор с поставщиком</h3>
+          <dl><dt>Ситуация</dt><dd>Поставщик сорвал сроки и отказался возвращать предоплату.</dd><dt>Решение</dt><dd>Претензионная работа и иск в арбитраж.</dd></dl>
+          <div class="jr-case__res">Возврат 4,2 млн ₽</div>
+        </article>
+        <article class="jr-card jr-case jr-rv">
+          <span class="jr-case__tag">Недвижимость</span>
+          <h3>Затопление квартиры</h3>
+          <dl><dt>Ситуация</dt><dd>Управляющая компания отказывалась возмещать ущерб.</dd><dt>Решение</dt><dd>Независимая экспертиза и иск о возмещении.</dd></dl>
+          <div class="jr-case__res">Взыскано 860 тыс. ₽</div>
+        </article>
+        <article class="jr-card jr-case jr-rv">
+          <span class="jr-case__tag">Банкротство</span>
+          <h3>Списание долгов</h3>
+          <dl><dt>Ситуация</dt><dd>Клиент не мог расплатиться по кредитам и микрозаймам.</dd><dt>Решение</dt><dd>Процедура банкротства физического лица.</dd></dl>
+          <div class="jr-case__res">Списано 2,8 млн ₽</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ОТЗЫВЫ -->
+  <section class="jr-sec jr-sec--alt" id="jrReviews">
+    <div class="jr-wrap">
+      <div class="jr-head jr-rv">
+        <span class="jr-eyebrow">Отзывы</span>
+        <h2 class="jr-h2">Что говорят клиенты</h2>
+      </div>
+      <div class="jr-grid jr-grid--3">
+        <figure class="jr-card jr-quote jr-rv"><p>Чётко объяснили, что делать, и не обещали лишнего. Дело решилось быстрее, чем я ожидал.</p><footer><i>А</i><div><b>Имя Клиента</b><span>Предприниматель</span></div></footer></figure>
+        <figure class="jr-card jr-quote jr-rv"><p>Спасибо за поддержку в сложный период. Всегда на связи, отвечали на любые вопросы.</p><footer><i>М</i><div><b>Имя Клиента</b><span>Частный клиент</span></div></footer></figure>
+        <figure class="jr-card jr-quote jr-rv"><p>Работаем уже третий год: договоры, споры, проверки. Команде можно доверять.</p><footer><i>Д</i><div><b>Имя Клиента</b><span>Директор компании</span></div></footer></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЦЕНЫ -->
+  <section class="jr-sec" id="jrPrices">
+    <div class="jr-wrap">
+      <div class="jr-head jr-rv">
+        <span class="jr-eyebrow">Стоимость</span>
+        <h2 class="jr-h2">Понятные тарифы без скрытых платежей</h2>
+        <p class="jr-lead">Итоговая цена зависит от сложности дела и называется после консультации.</p>
+      </div>
+      <div class="jr-grid jr-grid--3">
+        <article class="jr-card jr-price jr-rv">
+          <h3>Консультация</h3><p>Разовая встреча с юристом</p>
+          <div class="jr-price__sum">от 3 000 ₽</div>
+          <ul><li>Анализ ситуации</li><li>Оценка перспектив</li><li>План действий</li></ul>
+          <a class="jr-btn jr-btn--line" href="#jrForm">Записаться</a>
+        </article>
+        <article class="jr-card jr-price jr-price--hot jr-rv">
+          <span class="jr-price__badge">Популярный</span>
+          <h3>Ведение дела</h3><p>Полное сопровождение под ключ</p>
+          <div class="jr-price__sum">от 40 000 ₽</div>
+          <ul><li>Подготовка документов</li><li>Представительство в суде</li><li>Отчёт на каждом этапе</li></ul>
+          <a class="jr-btn jr-btn--gold" href="#jrForm">Обсудить дело</a>
+        </article>
+        <article class="jr-card jr-price jr-rv">
+          <h3>Абонентское обслуживание</h3><p>Юрист для вашего бизнеса</p>
+          <div class="jr-price__sum">от 15 000 ₽/мес</div>
+          <ul><li>Консультации без лимита</li><li>Экспертиза договоров</li><li>Приоритетная связь</li></ul>
+          <a class="jr-btn jr-btn--line" href="#jrForm">Узнать подробнее</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="jr-sec jr-sec--alt" id="jrFaq">
+    <div class="jr-wrap">
+      <div class="jr-head jr-rv">
+        <span class="jr-eyebrow">FAQ</span>
+        <h2 class="jr-h2">Частые вопросы</h2>
+      </div>
+      <div class="jr-faq jr-rv">
+        <details><summary>Сколько стоит первая консультация?</summary><p>Стоимость указана в разделе «Цены». Если после консультации вы заключаете договор, её стоимость можно зачесть в оплату работы.</p></details>
+        <details><summary>Вы гарантируете результат?</summary><p>Исход дела зависит от суда, поэтому честная гарантия невозможна. Но мы заранее оцениваем перспективы и работаем только по делам, где они есть.</p></details>
+        <details><summary>Как обеспечивается конфиденциальность?</summary><p>Мы подписываем соглашение о неразглашении, а информация по делу хранится только у ведущего юриста и ограниченного круга сотрудников.</p></details>
+        <details><summary>Работаете ли вы в других городах?</summary><p>Да. Консультируем дистанционно, а представительство в судах возможно по всей стране.</p></details>
+        <details><summary>Как быстро вы начнёте работу?</summary><p>После подписания договора берём дело в работу в тот же день. Срочные вопросы разбираем в приоритете.</p></details>
+        <details><summary>Можно ли оплатить частями?</summary><p>Да, для ведения дела возможна рассрочка. Условия обсудим на консультации.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ФОРМА -->
+  <section class="jr-sec jr-sec--dark" id="jrForm">
+    <div class="jr-wrap jr-cta">
+      <div class="jr-rv">
+        <span class="jr-eyebrow">Консультация</span>
+        <h2 class="jr-h2">Расскажите о ситуации, и мы подскажем решение</h2>
+        <p class="jr-lead">Оставьте заявку, юрист свяжется с вами в течение 15 минут в рабочее время. Первичный разбор ситуации конфиденциален.</p>
+      </div>
+      <div class="jr-form jr-rv" id="jrFormBox">
+        <h3>Получить консультацию</h3>
+        <p>Заполните форму, это займёт минуту</p>
+        <form id="jrFormEl" novalidate>
+          <div class="jr-field"><label for="jrName">Ваше имя</label><input id="jrName" name="name" type="text" placeholder="Как к вам обращаться" required></div>
+          <div class="jr-field"><label for="jrPhone">Телефон</label><input id="jrPhone" name="phone" type="tel" placeholder="+7 (___) ___-__-__" required></div>
+          <div class="jr-field"><label for="jrTopic">Тема</label>
+            <select id="jrTopic" name="topic">
+              <option>Бизнес и корпоративное право</option>
+              <option>Недвижимость</option>
+              <option>Семейное право</option>
+              <option>Судебная защита</option>
+              <option>Банкротство</option>
+              <option>Договоры и документы</option>
+              <option>Другое</option>
+            </select>
+          </div>
+          <div class="jr-field"><label for="jrMsg">Кратко о ситуации</label><textarea id="jrMsg" name="message" placeholder="Необязательно"></textarea></div>
+          <label class="jr-agree"><input type="checkbox" id="jrAgree" required><span>Согласен на обработку персональных данных и с <a href="/privacy" target="_blank">политикой конфиденциальности</a></span></label>
+          <button class="jr-btn jr-btn--gold" type="submit">Отправить заявку</button>
+        </form>
+        <div class="jr-ok"><b>Спасибо за заявку!</b>Мы свяжемся с вами в ближайшее время.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- КОНТАКТЫ -->
+  <section class="jr-sec" id="jrContacts">
+    <div class="jr-wrap jr-contacts">
+      <div class="jr-rv">
+        <span class="jr-eyebrow">Контакты</span>
+        <h2 class="jr-h2">Приходите в офис или напишите нам</h2>
+        <div class="jr-clist">
+          <div><small>Телефон</small><a href="tel:+70000000000">+7 (000) 000-00-00</a></div>
+          <div><small>Email</small><a href="mailto:info@example.ru">info@example.ru</a></div>
+          <div><small>Адрес</small><span>г. Город, ул. Улица, д. 1, офис 1</span></div>
+          <div><small>Режим работы</small><span>Пн–Пт 9:00–19:00, Сб 10:00–15:00</span></div>
+          <div><small>Мессенджеры</small><a href="https://t.me/" target="_blank" rel="noopener">Telegram</a> &nbsp;·&nbsp; <a href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a></div>
+        </div>
+      </div>
+      <div class="jr-map jr-rv">
+        <!-- Вставьте карту: <iframe src="https://yandex.ru/map-widget/..." width="100%" height="100%" style="border:0;border-radius:20px"></iframe> -->
+        Здесь будет карта
+      </div>
+    </div>
+  </section>
+
+  <!-- ПОДВАЛ -->
+  <footer class="jr-foot">
+    <div class="jr-wrap">
+      <div>© <span id="jrYear">2026</span> {{НАЗВАНИЕ}}. ИНН 0000000000 · ОГРН 0000000000000</div>
+      <div class="jr-foot__links">
+        <a href="/privacy">Политика конфиденциальности</a>
+        <a href="/offer">Публичная оферта</a>
+      </div>
+    </div>
+  </footer>
+
+  <a class="jr-fab" href="tel:+70000000000" aria-label="Позвонить">
+    <svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+  </a>
+</div>
+
+<script>
+(function () {
+  // Адрес приёма заявок (вебхук, Formspree, свой сервер). Пусто — форма только показывает «Спасибо».
+  var JR_FORM_ENDPOINT = '';
+
+  var root = document.getElementById('jrSite');
+  if (!root) return;
+
+  // Меню: тень при прокрутке и бургер
+  var nav = document.getElementById('jrNav');
+  var burger = document.getElementById('jrBurger');
+  var mob = document.getElementById('jrMob');
+  function onScroll() { nav.classList.toggle('scrolled', window.scrollY > 10); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  function closeMenu() { burger.classList.remove('open'); mob.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); }
+  burger.addEventListener('click', function () {
+    var open = !mob.classList.contains('open');
+    mob.classList.toggle('open', open);
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  mob.addEventListener('click', function (e) { if (e.target.tagName === 'A') closeMenu(); });
+
+  // Плавная прокрутка по якорям внутри блока
+  root.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href^="#jr"]');
+    if (!a) return;
+    var t = document.getElementById(a.getAttribute('href').slice(1));
+    if (!t) return;
+    e.preventDefault();
+    t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // Появление блоков
+  var items = root.querySelectorAll('.jr-rv');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.12 });
+    items.forEach(function (el, i) { el.style.transitionDelay = (i % 4) * 70 + 'ms'; io.observe(el); });
+  } else {
+    items.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  // Год в подвале
+  var y = document.getElementById('jrYear');
+  if (y) y.textContent = new Date().getFullYear();
+
+  // Маска телефона
+  var phone = document.getElementById('jrPhone');
+  phone.addEventListener('input', function () {
+    var d = phone.value.replace(/\D/g, '');
+    if (d[0] === '8') d = '7' + d.slice(1);
+    if (d[0] !== '7') d = '7' + d;
+    d = d.slice(0, 11);
+    var s = '+7';
+    if (d.length > 1) s += ' (' + d.slice(1, 4);
+    if (d.length >= 4) s += ') ' + d.slice(4, 7);
+    if (d.length >= 7) s += '-' + d.slice(7, 9);
+    if (d.length >= 9) s += '-' + d.slice(9, 11);
+    phone.value = s;
+  });
+
+  // Отправка формы
+  var form = document.getElementById('jrFormEl');
+  var box = document.getElementById('jrFormBox');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = document.getElementById('jrName');
+    var ok = true;
+    [name, phone].forEach(function (f) { f.parentNode.classList.remove('err'); });
+    if (!name.value.trim()) { name.parentNode.classList.add('err'); ok = false; }
+    if (phone.value.replace(/\D/g, '').length < 11) { phone.parentNode.classList.add('err'); ok = false; }
+    if (!document.getElementById('jrAgree').checked) { ok = false; alert('Подтвердите согласие на обработку персональных данных'); }
+    if (!ok) return;
+
+    var data = new FormData(form);
+    function done() { box.classList.add('sent'); }
+    if (!JR_FORM_ENDPOINT) { done(); return; }
+    fetch(JR_FORM_ENDPOINT, { method: 'POST', body: data }).then(done).catch(function () { alert('Не удалось отправить. Позвоните нам по телефону.'); });
+  });
+})();
+</script>
