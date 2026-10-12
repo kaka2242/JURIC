@@ -1,12 +1,13 @@
 <!--
   ЮРИДИЧЕСКАЯ КОМПАНИЯ — блок для Tilda (T123 «Произвольный HTML»)
+  Стиль: iOS «жидкое стекло» (блок iOS GLASS в конце <style>).
   Название: замените {{НАЗВАНИЕ}} (Ctrl+F) во всём файле.
   Цвета и шрифты — в переменных .jr-site ниже.
   Форма: укажите адрес приёма заявок в JR_FORM_ENDPOINT (внизу в <script>).
 -->
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 .jr-site, .jr-site * { box-sizing: border-box; margin: 0; padding: 0; }
 .jr-site input, .jr-site textarea, .jr-site select, .jr-site button { font: inherit; }
@@ -292,9 +293,193 @@
   .jr-hero__cta .jr-btn { width: 100%; }
   .jr-faq summary { font-size: 21px; }
 }
+
+/* ═════════════════════════════════════════════
+   iOS «LIQUID GLASS» ТЕМА (перекрывает стили выше)
+   Синий акцент меняется в --bronze / --bronze2
+═════════════════════════════════════════════ */
+.jr-site {
+  --head:   #ffffff;
+  --navy:   #ffffff;
+  --navy2:  #12285a;
+  --ink:    #ffffff;
+  --text:   rgba(235,242,255,.78);
+  --muted:  rgba(200,215,245,.58);
+  --bronze: #0a84ff;
+  --bronze2:#64b5ff;
+  --bg:     #050b1c;
+  --line:   rgba(255,255,255,.16);
+  --radius: 28px;
+  --serif:  -apple-system, BlinkMacSystemFont, 'SF Pro Display', Inter, 'Segoe UI', Arial, sans-serif;
+  --sans:   -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, 'Segoe UI', Arial, sans-serif;
+  --glass:  linear-gradient(135deg, rgba(255,255,255,.17), rgba(255,255,255,.05));
+  --glass-b: 1px solid rgba(255,255,255,.2);
+  --glass-s: inset 0 1px 1px rgba(255,255,255,.45), inset 0 -1px 1px rgba(255,255,255,.08), 0 24px 60px rgba(0,0,0,.35);
+  --blur:   blur(26px) saturate(180%);
+  position: relative;
+  background: var(--bg);
+}
+.jr-site section, .jr-site footer { position: relative; z-index: 1; }
+.jr-site section { scroll-margin-top: 96px; }
+
+/* фон с цветными пятнами — за ним стекло «преломляет» цвет */
+.jr-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.jr-bg i { position: absolute; width: 620px; height: 620px; border-radius: 50%; filter: blur(110px); opacity: .55; }
+.jr-bg i:nth-child(1) { top: 0;    left: -180px; background: #0a4dff; }
+.jr-bg i:nth-child(2) { top: 7%;   right: -220px; background: #00a6ff; opacity: .4; }
+.jr-bg i:nth-child(3) { top: 24%;  left: -240px; background: #5b3dff; opacity: .4; }
+.jr-bg i:nth-child(4) { top: 42%;  right: -200px; background: #0a84ff; }
+.jr-bg i:nth-child(5) { top: 60%;  left: -220px; background: #00c2ff; opacity: .35; }
+.jr-bg i:nth-child(6) { top: 76%;  right: -240px; background: #3a2cff; opacity: .5; }
+.jr-bg i:nth-child(7) { top: 91%;  left: -160px; background: #0a84ff; opacity: .45; }
+
+/* секции прозрачные */
+.jr-sec--alt, .jr-sec--dark { background: transparent; }
+.jr-hero { background: transparent; }
+.jr-hero::after { opacity: .035; }
+
+/* типографика */
+.jr-h2, .jr-hero h1, .jr-card h3, .jr-why h3, .jr-step h3, .jr-person h3 { letter-spacing: -.03em; font-weight: 700; }
+.jr-h2 { font-size: clamp(30px, 4.2vw, 50px); line-height: 1.08; }
+.jr-hero h1 { font-size: clamp(40px, 6.6vw, 82px); line-height: 1.04; letter-spacing: -.04em; }
+.jr-hero h1 em { font-style: normal; background: linear-gradient(90deg, #64b5ff, #0a84ff 60%, #8f7bff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.jr-eyebrow { color: var(--bronze2); }
+.jr-card h3 { font-size: 22px; }
+.jr-why h3, .jr-step h3, .jr-person h3 { font-size: 21px; }
+.jr-why b { font-size: 38px; font-weight: 700; }
+.jr-step::before { font-size: 40px; font-weight: 700; }
+.jr-stat b { font-weight: 700; letter-spacing: -.03em; }
+.jr-case__res { font-size: 24px; font-weight: 700; }
+.jr-price__sum { font-size: 36px; font-weight: 700; letter-spacing: -.03em; }
+.jr-form h3 { font-size: 26px; font-weight: 700; }
+.jr-faq summary { font-size: 19px; font-weight: 600; }
+.jr-clist a, .jr-clist span { font-size: 18px; font-weight: 600; }
+.jr-logo { font-size: 21px; font-weight: 700; letter-spacing: -.03em; }
+.jr-logo i { border-radius: 3px; background: linear-gradient(135deg, #64b5ff, #0a84ff); box-shadow: 0 0 14px rgba(10,132,255,.8); }
+.jr-person span, .jr-card__more { color: var(--bronze2); }
+
+/* общая «стеклянная» поверхность */
+.jr-card, .jr-why, .jr-form, .jr-map, .jr-stat, .jr-hero__tag, .jr-faq details, .jr-photo {
+  background: var(--glass);
+  border: var(--glass-b);
+  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  box-shadow: var(--glass-s);
+}
+.jr-card, .jr-why { border-radius: var(--radius); }
+.jr-why { padding: 28px 24px; border-top: var(--glass-b); }
+.jr-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,.4); box-shadow: var(--glass-s), 0 0 40px rgba(10,132,255,.25); }
+.jr-ico {
+  border-radius: 16px; color: #fff; background: linear-gradient(180deg, #4aa3ff, #0a84ff);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.55), 0 8px 20px rgba(10,132,255,.45);
+}
+
+/* кнопки */
+.jr-btn { backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); }
+.jr-btn--gold {
+  background: linear-gradient(180deg, #4aa3ff, #0a84ff); border-color: rgba(255,255,255,.3); color: #fff;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.55), 0 10px 28px rgba(10,132,255,.5);
+}
+.jr-btn--gold:hover { background: linear-gradient(180deg, #6bb4ff, #1a8fff); transform: translateY(-2px); }
+.jr-btn--ghost, .jr-btn--line {
+  background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.28); color: #fff;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.35);
+}
+.jr-btn--ghost:hover, .jr-btn--line:hover { background: rgba(255,255,255,.2); color: #fff; }
+
+/* меню: плавающая капсула */
+.jr-nav {
+  top: 12px; left: 16px; right: 16px; height: 62px; max-width: 1180px; margin: 0 auto;
+  border-radius: 999px; border: var(--glass-b);
+  background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.06)), rgba(8,16,40,.38);
+  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  box-shadow: var(--glass-s);
+}
+.jr-nav .jr-wrap { padding: 0 10px 0 22px; }
+.jr-nav.scrolled { box-shadow: var(--glass-s), 0 0 0 1px rgba(255,255,255,.04); background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.07)), rgba(6,12,32,.6); }
+.jr-links a { color: rgba(255,255,255,.75); }
+.jr-links a:hover { color: #fff; }
+.jr-nav .jr-btn { padding: 11px 22px; }
+.jr-burger { background: rgba(255,255,255,.12); border: var(--glass-b); border-radius: 50%; }
+.jr-burger span, .jr-burger span::before, .jr-burger span::after { background: #fff; }
+.jr-burger.open span { background: transparent; }
+.jr-mob {
+  top: 84px; left: 16px; right: 16px; border-radius: 28px; border: var(--glass-b);
+  background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.06)), rgba(8,16,40,.7);
+  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); box-shadow: var(--glass-s);
+}
+.jr-mob a { border-bottom-color: rgba(255,255,255,.12); }
+.jr-hero { padding-top: 170px; }
+
+/* hero */
+.jr-hero__tag { border-radius: 999px; color: rgba(255,255,255,.85); }
+.jr-hero__tag i { background: var(--bronze2); box-shadow: 0 0 10px var(--bronze2); }
+.jr-stats { border-top: none; padding-top: 0; gap: 14px; max-width: 780px; }
+.jr-stat { border-radius: 24px; padding: 22px 22px 20px; }
+
+/* фото-заглушки */
+.jr-photo { border-radius: 28px; color: rgba(255,255,255,.5); }
+.jr-photo::after { border: 1px solid rgba(255,255,255,.18); border-radius: 18px; }
+.jr-team .jr-photo { border-radius: 24px; }
+
+/* кейсы, цены, отзывы */
+.jr-case__tag { color: #fff; background: rgba(10,132,255,.35); border: 1px solid rgba(100,181,255,.5); }
+.jr-quote footer i { background: linear-gradient(180deg, #4aa3ff, #0a84ff); }
+.jr-price--hot {
+  background: linear-gradient(135deg, rgba(10,132,255,.45), rgba(10,132,255,.12));
+  border-color: rgba(120,190,255,.6);
+  box-shadow: var(--glass-s), 0 0 60px rgba(10,132,255,.3);
+}
+.jr-price--hot.jr-card:hover { border-color: rgba(160,210,255,.8); }
+.jr-price li::before { background: var(--bronze2); border-radius: 50%; transform: none; width: 7px; height: 7px; top: 10px; }
+
+/* FAQ — стеклянные строки */
+.jr-faq details { border-radius: 22px; margin-bottom: 12px; border-bottom: var(--glass-b); }
+.jr-faq summary { padding: 22px 56px 22px 26px; }
+.jr-faq summary::after { right: 24px; color: var(--bronze2); }
+.jr-faq details p { padding: 0 26px 24px; }
+
+/* форма */
+.jr-form { border-radius: 32px; color: var(--text); padding: 38px; }
+.jr-field label { color: rgba(255,255,255,.85); }
+.jr-field input, .jr-field select, .jr-field textarea {
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.22); color: #fff; border-radius: 16px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+}
+.jr-field input::placeholder, .jr-field textarea::placeholder { color: rgba(255,255,255,.4); }
+.jr-field select option { color: #14213d; background: #fff; }
+.jr-field input:focus, .jr-field select:focus, .jr-field textarea:focus { border-color: var(--bronze2); box-shadow: 0 0 0 4px rgba(10,132,255,.28); background: rgba(255,255,255,.12); }
+.jr-field.err input { border-color: #ff6b6b; }
+.jr-agree a { color: var(--bronze2); }
+.jr-ok b { color: #fff; }
+
+/* контакты, подвал, кнопка звонка */
+.jr-map { border-radius: 32px; }
+.jr-foot { background: rgba(3,8,22,.55); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); border-top: 1px solid rgba(255,255,255,.12); }
+.jr-fab {
+  background: linear-gradient(180deg, #4aa3ff, #0a84ff); border: 1px solid rgba(255,255,255,.35);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.55), 0 12px 30px rgba(10,132,255,.55);
+}
+
+@media (max-width: 1020px) { .jr-nav { left: 12px; right: 12px; } .jr-mob { left: 12px; right: 12px; } }
+@media (max-width: 640px) {
+  .jr-hero { padding-top: 130px; }
+  .jr-nav { height: 58px; top: 10px; }
+  .jr-mob { top: 78px; }
+  .jr-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .jr-stat { padding: 14px 12px; border-radius: 20px; min-width: 0; }
+  .jr-stat b { font-size: 26px; }
+  .jr-stat span { font-size: 12px; }
+  .jr-form { padding: 26px 20px; border-radius: 28px; }
+  .jr-bg i { width: 380px; height: 380px; filter: blur(80px); }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .jr-card, .jr-why, .jr-form, .jr-map, .jr-stat, .jr-faq details, .jr-nav, .jr-mob { background: rgba(20,36,80,.92); }
+}
 </style>
 
 <div class="jr-site" id="jrSite">
+
+  <div class="jr-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
   <!-- МЕНЮ -->
   <header class="jr-nav" id="jrNav">
@@ -340,7 +525,7 @@
       <div class="jr-stats">
         <div class="jr-stat"><b>15+</b><span>лет практики</span></div>
         <div class="jr-stat"><b>1200+</b><span>выигранных дел</span></div>
-        <div class="jr-stat"><b>94%</b><span>положительных решений</span></div>
+        <div class="jr-stat"><b>94%</b><span>успешных решений</span></div>
       </div>
     </div>
   </section>
